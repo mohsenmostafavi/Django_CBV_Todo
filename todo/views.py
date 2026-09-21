@@ -1,3 +1,14 @@
-from django.shortcuts import render
+from django.views.generic.list import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-# Create your views here.
+
+from .models import Task
+
+
+class TaskList(LoginRequiredMixin, ListView):
+    model = Task
+    context_object_name = "tasks"
+    template_name = "todo/list_task.html"
+
+    def get_queryset(self):
+        return self.model.objects.filter(user=self.request.user)
